@@ -86,7 +86,7 @@ const handleSubmit = async (e) => {
     // messageDiv.innerHTML = "..."
     loader(messageDiv)
 
-    const response = await fetch('https://positive-posts.onrender.com/', {
+    const response = await fetch('https://lincon-chat-bot.onrender.com/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
