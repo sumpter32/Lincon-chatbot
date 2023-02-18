@@ -2,8 +2,6 @@ import express from 'express'
 import * as dotenv from 'dotenv'
 import cors from 'cors'
 import { Configuration, OpenAIApi } from 'openai'
-import os
-import openai
 
 dotenv.config()
 
@@ -12,7 +10,7 @@ const configuration = new Configuration({
 });
 
 const openai = new OpenAIApi(configuration);
-const { Configuration, OpenAIApi } = require("openai");
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -30,12 +28,12 @@ app.post('/', async (req, res) => {
     const response = await openai.createCompletion({
       model: "text-curie-001",
       prompt: `pretend you are Jesus Christ from the living bible.${prompt}`,
-       temperature: 0.8,
-       max_tokens: 502,
-       top_p: 1,
-       frequency_penalty: 0.2,
-       presence_penalty: 0,
-});
+      temperature: 0.8,
+      max_tokens: 502,
+      top_p: 1,
+      frequency_penalty: 0.2,
+      presence_penalty: 0,
+    });
 
     res.status(200).send({
       bot: response.data.choices[0].text
