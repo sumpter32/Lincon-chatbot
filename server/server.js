@@ -29,7 +29,7 @@ app.post('/', async (req, res) => {
       model: "text-curie-001",
       prompt: `pretend you are Jesus Christ from the living bible.${prompt}`,
       temperature: 0.8,
-      max_tokens: 502,
+      max_tokens: 1500,
       top_p: 1,
       frequency_penalty: 0.2,
       presence_penalty: 0,
