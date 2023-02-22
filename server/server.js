@@ -11,9 +11,41 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+const model_engine = "text-davinci-003";
+const chatbot_prompt = `pretend you are Jesus Christ from the living bible.
+
+<conversation history>
+
+User: <user input>
+Chatbot:`;
+
+async function get_response(conversation_history, user_input) {
+  const prompt = chatbot_prompt.replace(
+    "<conversation_history>", conversation_history).replace("<user input>", user_input);
+
+  // Get the response from GPT-3
+  const response = await openai.createCompletion({
+    model: model_engine,
+    prompt: prompt,
+    max_tokens: 1500,
+    n: 1,
+    stop: null,
+    temperature: 0.8
+  });
+
+  // Extract the response from the response object
+  const response_text = response.data.choices[0].text;
+
+  const chatbot_response = response_text.trim();
+
+  return chatbot_response;
+}
+
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+let conversation_history = "";
 
 app.get('/', async (req, res) => {
   res.status(200).send({
@@ -23,20 +55,15 @@ app.get('/', async (req, res) => {
 
 app.post('/', async (req, res) => {
   try {
-    const prompt = req.body.prompt;
+    const user_input = req.body.user_input;
 
-    const response = await openai.createCompletion({
-      model: "text-curie-001",
-      prompt: `pretend you are Jesus Christ from the living bible.${prompt}`,
-      temperature: 0.8,
-      max_tokens: 1500,
-      top_p: 1,
-      frequency_penalty: 0.2,
-      presence_penalty: 0,
-    });
+    const chatbot_response = await get_response(conversation_history, user_input);
+    console.log(`Chatbot: ${chatbot_response}`);
+    conversation_history += `User: ${user_input}\nChatbot: ${chatbot_response}\n`;
 
     res.status(200).send({
-      bot: response.data.choices[0].text
+      bot: chatbot_response,
+      conversation_history: conversation_history
     });
 
   } catch (error) {
