@@ -19,27 +19,25 @@ const chatbot_prompt = `pretend you are Jesus Christ from the living bible.
 User: <user input>
 Chatbot:`;
 
-async function get_response(conversation_history, user_input) {
-  const prompt = chatbot_prompt.replace(
-    "<conversation_history>", conversation_history).replace("<user input>", user_input);
+async function get_response(model_engine, chatbot_prompt, conversation_history, user_input) {
+  const prompt = chatbot_prompt
+    .replace("<conversation_history>", conversation_history)
+    .replace("<user input>", user_input);
 
-  // Get the response from GPT-3
   const response = await openai.createCompletion({
     model: model_engine,
-    prompt: prompt,
+    prompt,
     max_tokens: 1500,
     n: 1,
     stop: null,
     temperature: 0.8
   });
 
-  // Extract the response from the response object
-  const response_text = response.data.choices[0].text;
+  const response_text = response.data.choices[0].text.trim();
 
-  const chatbot_response = response_text.trim();
-
-  return chatbot_response;
+  return response_text;
 }
+
 
 const app = express()
 app.use(cors())
@@ -55,15 +53,16 @@ app.get('/', async (req, res) => {
 
 app.post('/', async (req, res) => {
   try {
-    const user_input = req.body.user_input;
+    const user_input = req.body.prompt;
+    let { conversation_history } = req.body;
 
-    const chatbot_response = await get_response(conversation_history, user_input);
-    console.log(`Chatbot: ${chatbot_response}`);
+    const chatbot_response = await get_response(model_engine, chatbot_prompt, conversation_history, user_input);
+
     conversation_history += `User: ${user_input}\nChatbot: ${chatbot_response}\n`;
 
     res.status(200).send({
       bot: chatbot_response,
-      conversation_history: conversation_history
+      conversation_history
     });
 
   } catch (error) {
@@ -71,5 +70,6 @@ app.post('/', async (req, res) => {
     res.status(500).send(error || 'Something went wrong');
   }
 })
+
 
 app.listen(5000, () => console.log('AI server started on http://localhost:5000'))
