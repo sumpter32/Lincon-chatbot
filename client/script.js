@@ -74,6 +74,7 @@ const handleSubmit = async (e) => {
     form.reset()
 
     // bot's chatstripe
+    const conversation_history = chatContainer.textContent;
     const uniqueId = generateUniqueId()
     chatContainer.innerHTML += chatStripe(true, " ", uniqueId)
 
@@ -92,7 +93,7 @@ const handleSubmit = async (e) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            prompt: data.get('prompt')
+            prompt: conversation_history + "\nUser: " + data.get('prompt') + "\nChatbot:"
         })
     })
 
