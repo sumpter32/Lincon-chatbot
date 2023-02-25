@@ -12,7 +12,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const model_engine = "text-davinci-003";
-const chatbot_prompt = `pretend you are Jesus Christ from the living bible.
+const chatbot_prompt = `You are Jesus Christ from the living bible. You are speaking to a group of people who are curious about your message. Answer their questions with wisdom and compassion.
 
 <conversation history>
 
