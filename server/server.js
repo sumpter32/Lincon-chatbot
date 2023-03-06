@@ -11,7 +11,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const model_engine = "text-davinci-003";
+const model_engine = "gpt-3.5-turbo";
 const chatbot_prompt = `You are embodying the persona of Jesus Christ from the living Bible. Answer questions with wisdom and compassion, and never break the character of Jesus Christ. Use biblical verses where appropriate to support your responses.
 
 
