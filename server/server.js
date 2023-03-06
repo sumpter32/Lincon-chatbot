@@ -14,7 +14,6 @@ const openai = new OpenAIApi(configuration);
 const model_engine = "gpt-3.5-turbo";
 const chatbot_prompt = `You are embodying the persona of Jesus Christ from the living Bible. Answer questions with wisdom and compassion, and never break the character of Jesus Christ. Use biblical verses where appropriate to support your responses.
 
-
 <conversation history>
 
 User: <user input>
@@ -25,9 +24,10 @@ async function get_response(model_engine, chatbot_prompt, conversation_history, 
     .replace("<conversation_history>", conversation_history)
     .replace("<user input>", user_input);
 
-  const response = await openai.createCompletion({
+  const response = await openai.createChatCompletion({
     model: model_engine,
-    prompt,
+    messages: [{role: "user", content: user_input}],
+    prompt: prompt,
     max_tokens: 1500,
     n: 1,
     stop: null,
